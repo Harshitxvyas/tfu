@@ -14,4 +14,3 @@ AND l."source" NOT LIKE 'act%'
 and l.source not ilike '%youtube%'
 '''
     return query2
-

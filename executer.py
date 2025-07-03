@@ -1,23 +1,31 @@
 import psycopg2
 import pandas as pd
-from datetime import datetime, timedelta,date
+import os
+import streamlit as st
+from dotenv import load_dotenv
+from datetime import date, timedelta
+
+load_dotenv()
+
 current_date = date.today()
-yesterday = (current_date - timedelta(days= 0))
+yesterday = current_date - timedelta(days=1)
+
+def get_env(key):
+    return os.getenv(key)
+
 def execute_query(query):
     conn = None
     cur = None
 
     try:
         conn = psycopg2.connect(
-           host = "data-analysis-db-ro-postgresql-blr1-73858-do-user-13062511-0.m.db.ondigitalocean.com",
-database = "test",
-user = "doadmin",
-password = "AVNS_zuOg83f71JBINpat9pi",
-port = "25060"
+            host=get_env("DB_HOST"),
+            database=get_env("DB_NAME"),
+            user=get_env("DB_USER"),
+            password=get_env("DB_PASSWORD"),
+            port=int(get_env("DB_PORT"))
         )
         cur = conn.cursor()
-
-        # Execute the query
         cur.execute(query)
         results = cur.fetchall()
         return results
@@ -33,8 +41,3 @@ port = "25060"
             conn.close()
             print("PostgreSQL connection is closed")
             print(query)
-
-
-
-
-    
