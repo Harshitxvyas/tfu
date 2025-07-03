@@ -10,25 +10,32 @@ def ads_query2(start_date,end_date):
 where "reportDate" between '{start_date}' and '{end_date}'
 '''
     return query2
+
+
 finance_keywords = ['hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
                     'bkhgt', 'jsnit', 'akiob', 'jhft', 'mbcwc', 'amct', 'hspct',
                     'asatp', 'kjamat', 'tw']
 
 
+finance_keywords = [
+    'hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
+    'bkhgt', 'jsnit', 'akiob', 'jhft', 'mbcwc', 'amct', 'hspct',
+    'asatp', 'kjamat', 'tw'
+]
 
 def categorize(row):
-    campaign = str(row['CampaignName']).lower()
-    ad_name = str(row['AdName']).lower()
-    platform = str(row['Platform']).lower()
+    campaign = str(row.get('CampaignName', '')).lower()
+    ad_name = str(row.get('AdName', '')).lower()
+    platform = str(row.get('Platform', '')).lower()
 
-    if platform == 'taboola':
-        if 'al-' in ad_name:
-            return 'Spirituality'
-        else:
-            return 'Finance'
- 
-    elif any(keyword in campaign for keyword in finance_keywords) or any(keyword in ad_name for keyword in finance_keywords):
-        return 'Finance'
-    else:
+    # Priority condition for Taboola platform with 'al-' in AdName
+    if platform == 'taboola' and 'al-' in ad_name:
         return 'Spirituality'
+
+    # Check if any finance keyword is in campaign or ad name
+    if any(keyword in campaign or keyword in ad_name for keyword in finance_keywords):
+        return 'Finance'
+
+    return 'Spirituality'
+
 
