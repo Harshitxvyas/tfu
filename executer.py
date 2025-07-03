@@ -11,7 +11,7 @@ current_date = date.today()
 yesterday = current_date - timedelta(days=1)
 
 def get_env(key):
-    return st.secrets(key)
+    return st.secrets[key]
 
 def execute_query(query):
     conn = None
