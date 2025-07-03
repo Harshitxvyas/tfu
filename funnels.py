@@ -61,7 +61,7 @@ def create_funnel_table2(df, platform):
     if platform.lower() == 'google':
         mask_free = (
             ~df_filtered['CampaignName'].str.contains('Paid', case=False, na=False) &
-            ~df_filtered['AdName'].str.contains('mxpayment', case=False, na=False)
+            ~df_filtered['AdsetName'].str.contains('mxpayment', case=False, na=False)
         )
     elif platform.lower() == 'facebook':
         mask_free = (
