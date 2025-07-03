@@ -9,11 +9,11 @@ def execute_query(query):
 
     try:
         conn = psycopg2.connect(
-            host="db-ro-prod-postgresql-blr1-42125-do-user-13062511-0.b.db.ondigitalocean.com",
-            database="test",
-            user="doadmin",
-            password="AVNS_zuOg83f71JBINpat9pi",
-            port="25060"
+           host = "data-analysis-db-ro-postgresql-blr1-73858-do-user-13062511-0.m.db.ondigitalocean.com",
+database = "test",
+user = "doadmin",
+password = "AVNS_zuOg83f71JBINpat9pi",
+port = "25060"
         )
         cur = conn.cursor()
 

@@ -72,13 +72,16 @@ if side_radio == 'Overall Analysis':
 
             lead_df.columns = ['Category', 'Source','Comment' ,'LeadId', "UserId", "CreatedAt", "MasterClass",'UserCreated']
             lead_df = lead_df[lead_df['Category'].isin(['Finance', 'Spirituality'])]
+            # lead_df.loc[(lead_df['Comment'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
             joins_df.columns = ['Category', 'Source', 'Comment','LeadId', "UserId", "CreatedAt", "MasterClass",'meetingId',"UserCreated"]
             joins_df = joins_df[joins_df['Category'].isin(['Finance', 'Spirituality'])]
+            # joins_df.loc[(joins_df['Comment'].str.contains('_aj|astroji|astro_ji', na=False,case = False)),'Category'] = 'Astroji'
             payment_df.columns = ['PaymentId', 'Amount', 'Payment Category', "UserId", "Pay Created", "MC/BX Paid For"]
             spend_df.columns = ['Platform', 'CampaignName', 'AdsetName', 'AdName', 'AdId', 'Clicks', 'Impressions', 'Reach','Cost', 'ReportDate']
             payment_df['Amount'] = payment_df['Amount'].astype(int)
             spend_df = spend_df.replace(-1, 0)
             spend_df['Category'] = spend_df.apply(categorize, axis=1)
+            # spend_df.loc[(spend_df['CampaignName'].str.contains('_aj', na=False,case = False)),'Category'] = 'Astroji'
             # spend_df['Category'] = spend_df['CampaignName'].apply(lambda x: 'Spirituality' if ('_al' in str(x).lower() and '_tw' not in str(x).lower()) else ('Finance' if '_tw' in str(x).lower() else None))
             start_date2 = start_date
             start_date = pd.to_datetime(start_utc)
@@ -100,13 +103,14 @@ if side_radio == 'Overall Analysis':
                 new_join_counts = category_joins[category_joins['UserCreated'] >= start_date]['UserId'].nunique()
                 new_total_join_counts = category_joins[category_joins['UserCreated'] >= start_date]['meetingId'].nunique()
                 rev_raw_df = pd.merge(lead_df, payment_df, on="UserId", how='inner')
+                # rev_raw_df.loc[(rev_raw_df['Category'] == 'Astroji'),'Payment Category'] = 'Astroji'
                 rev_raw_df = rev_raw_df[['UserId','CreatedAt','Pay Created','PaymentId','Category','Payment Category','Amount']]
                 rev_raw_df.drop_duplicates()
                 rev_df = rev_raw_df[rev_raw_df["Pay Created"] > rev_raw_df["CreatedAt"]]
                 rev_df_final = rev_df[rev_df['Payment Category'] == cat]
                 rev_corrected = rev_df_final[['Amount','PaymentId']].drop_duplicates()
                 revenue = rev_corrected['Amount'].sum()
-                converted = rev_corrected[rev_corrected["Amount"] > 299]['PaymentId'].count()
+                converted = rev_corrected[rev_corrected["Amount"] > 399]['PaymentId'].count()
                 new_df = category_leads[category_leads['UserCreated'] >= start_date]
                 new_rev_raw_df = pd.merge(new_df, payment_df, on="UserId", how='inner')
                 new_rev_raw_df.drop_duplicates()
@@ -378,14 +382,17 @@ if side_radio == 'Platform Level Analysis':
 
         lead_df.columns = ['Category', 'Source','Comment' ,'LeadId', "UserId", "CreatedAt", "MasterClass",'UserCreated']
         lead_df = lead_df[lead_df['Source'].fillna('').str.lower() == platform.lower()]
+        lead_df.loc[(lead_df['Comment'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
         joins_df.columns = ['Category', 'Source', 'Comment','LeadId', "UserId", "CreatedAt", "MasterClass",'meetingId',"UserCreated"]
         joins_df = joins_df[joins_df['Source'].fillna('').str.lower() == platform.lower()]
+        joins_df.loc[(joins_df['Comment'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
         payment_df.columns = ['PaymentId', 'Amount', 'Payment Category', "UserId", "Pay Created", "MC/BX Paid For"]
         spend_df.columns = ['Platform', 'CampaignName', 'AdsetName', 'AdName', 'AdId', 'Clicks', 'Impressions', 'Reach','Cost', 'ReportDate']
         spend_df = spend_df[spend_df['Platform'].fillna('').str.lower() == platform.lower()]
         payment_df['Amount'] = payment_df['Amount'].astype(int)
         spend_df = spend_df.replace(-1, 0)
         spend_df['Category'] = spend_df.apply(categorize, axis=1)
+        spend_df.loc[(spend_df['CampaignName'].str.contains('_aj', na = False, case = False)),'Category'] = 'Astroji'
         # spend_df['Category'] = spend_df['CampaignName'].apply(lambda x: 'Spirituality' if ('_al' in str(x).lower() and '_tw' not in str(x).lower()) else ('Finance' if '_tw' in str(x).lower() else None))
         start_date2 = start_date
         start_date = pd.to_datetime(start_utc)
@@ -397,7 +404,7 @@ if side_radio == 'Platform Level Analysis':
         for i, cat in enumerate(categories):  
             category_leads = lead_df[lead_df['Category']==cat]
             category_joins = joins_df[joins_df['Category']==cat]
-            category_spend = spend_df[spend_df['Category'] == cat]
+            category_spend = spend_df[(spend_df['Category'] == cat) & (spend_df['Platform'].str.lower() == platform.lower())]
             spend = category_spend['Cost'].sum()
             lead_counts = category_leads['LeadId'].nunique()
             user_counts = category_leads['UserId'].nunique()
@@ -620,7 +627,7 @@ if side_radio == 'Funnels Analysis':
         start_date = st.date_input('Choose the Starting Date', value=None, format="YYYY/MM/DD")
         end_date = st.date_input('Choose the Ending Date', value=None, format="YYYY/MM/DD")
         platform = st.selectbox('Select the Platform',['Google','Facebook','Taboola'])
-        category = st.selectbox('Select the Platform',['Spirituality','Finance'])
+        category = st.selectbox('Select the Platform',['Spirituality','Finance','Astroji'])
         end_date2 = end_date
         ist = pytz.timezone('Asia/Kolkata')
         if start_date:
@@ -660,9 +667,11 @@ if side_radio == 'Funnels Analysis':
 
         lead_df.columns = ['Category', 'Source','Comment' ,'LeadId', "UserId", "CreatedAt", "MasterClass",'UserCreated']
         lead_df = lead_df[lead_df['Source'].fillna('').str.lower() == platform.lower()]
+        # lead_df.loc[(lead_df['Comment'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
         lead_df = lead_df[lead_df['Category'].fillna('').str.lower() == category.lower()]
         lead_df = create_funnel_table(lead_df,platform)
         joins_df.columns = ['Category', 'Source', 'Comment','LeadId', "UserId", "CreatedAt", "MasterClass",'meetingId',"UserCreated"]
+        # joins_df.loc[(joins_df['Comment'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
         joins_df = joins_df[joins_df['Source'].fillna('').str.lower() == platform.lower()]
         joins_df = joins_df[joins_df['Category'].fillna('').str.lower() == category.lower()]
         joins_df  = create_funnel_table(joins_df,platform)
@@ -672,6 +681,7 @@ if side_radio == 'Funnels Analysis':
         payment_df['Amount'] = payment_df['Amount'].astype(int)
         spend_df = spend_df.replace(-1, 0)
         spend_df['Category'] = spend_df['CampaignName'].apply(lambda x: 'Spirituality' if ('_al' in str(x).lower() and '_tw' not in str(x).lower()) else ('Finance' if '_tw' in str(x).lower() else None))
+        # spend_df.loc[(spend_df['CampaignName'].str.contains('_aj|astroji|astro_ji',case = False, na=False)),'Category'] = 'Astroji'
         spend_df= spend_df[spend_df['Category'].fillna('').str.lower() == category.lower()]
         spend_df = create_funnel_table2(spend_df,platform)
         start_date2 = start_date
@@ -695,6 +705,7 @@ if side_radio == 'Funnels Analysis':
             new_join_counts = category_joins[category_joins['UserCreated'] >= start_date]['UserId'].nunique()
             new_total_join_counts = category_joins[category_joins['UserCreated'] >= start_date]['meetingId'].nunique()
             rev_raw_df = pd.merge(category_leads, payment_df, on="UserId", how='inner')
+            # rev_raw_df.loc[(rev_raw_df['Category'] == 'Astroji'),'Payment Category'] = 'Astroji'
             rev_raw_df.drop_duplicates()
             rev_df = rev_raw_df[rev_raw_df["Pay Created"] > rev_raw_df["CreatedAt"]]
             rev_df_final = rev_df[rev_df['Category'] == rev_df['Payment Category']]

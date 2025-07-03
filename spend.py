@@ -10,6 +10,10 @@ def ads_query2(start_date,end_date):
 where "reportDate" between '{start_date}' and '{end_date}'
 '''
     return query2
+finance_keywords = ['_hjst', '_kpsst', '_psst', '_cjot', '_gvlrs', '_dsaii', '_psis',
+                    '_bkhgt', '_jsnit', '_akiob', '_jhft', '_mbcwc', '_amct', '_hspct',
+                    '_asatp', '_kjamat', '_tw', '_tw']
+
 
 
 def categorize(row):
@@ -22,10 +26,9 @@ def categorize(row):
             return 'Spirituality'
         else:
             return 'Finance'
-    elif (('_al' in campaign or '_aj' in campaign) and '_tw' not in campaign):
-        return 'Spirituality'
-    elif '_tw' in campaign:
+ 
+    elif any(keyword in campaign for keyword in finance_keywords) or any(keyword in ad_name for keyword in finance_keywords):
         return 'Finance'
     else:
-        return None
+        return 'Spirituality'
 

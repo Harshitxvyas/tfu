@@ -9,8 +9,9 @@ Join "Bootcamp" b ON mc."bootcampId" = b."id"
 Join "User" u ON b."teacherId" = u."id"        
 Join "Categories" cat ON u."categoryId" = cat."id"        
 WHERE  L."createdAt" BETWEEN '{start_date}' AND '{end_date}'
-AND l."source" NOT IN  ('ret', 'LMS', 'MGID', 'calendar', 'maha-shiv-puja', 'pankajD', 'arvind.tech', 'retdm', 'null', 'cal', 'dm', 'email', 'push-notification', 'sms', 'freshdm', 'retp', 'api-ops', 'act', 'Zoom Reschedule', 'Livekit_Reschedule','astrolearn-app','calendar','mahakumbh')
+AND l."source" NOT IN  ('ret', 'LMS', 'MGID', 'calendar', 'maha-shiv-puja', 'pankajD', 'arvind.tech', 'retdm', 'null', 'cal', 'dm', 'email', 'push-notification', 'sms', 'freshdm', 'retp', 'api-ops', 'act', 'Zoom Reschedule','Livekit_Reschedule_Feedback','Livekit_Reschedule_Post_Joining','Livekit_Reschedule')
 AND l."source" NOT LIKE 'act%'
+and l.source not ilike '%youtube%'
 '''
     return query2
 
