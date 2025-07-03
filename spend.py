@@ -10,9 +10,9 @@ def ads_query2(start_date,end_date):
 where "reportDate" between '{start_date}' and '{end_date}'
 '''
     return query2
-finance_keywords = ['_hjst', '_kpsst', '_psst', '_cjot', '_gvlrs', '_dsaii', '_psis',
-                    '_bkhgt', '_jsnit', '_akiob', '_jhft', '_mbcwc', '_amct', '_hspct',
-                    '_asatp', '_kjamat', '_tw', '_tw']
+finance_keywords = ['hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
+                    'bkhgt', 'jsnit', 'akiob', 'jhft', 'mbcwc', 'amct', 'hspct',
+                    'asatp', 'kjamat', 'tw', '_tw']
 
 
 
