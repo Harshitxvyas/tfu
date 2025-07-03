@@ -12,7 +12,7 @@ where "reportDate" between '{start_date}' and '{end_date}'
     return query2
 finance_keywords = ['hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
                     'bkhgt', 'jsnit', 'akiob', 'jhft', 'mbcwc', 'amct', 'hspct',
-                    'asatp', 'kjamat', 'tw', '_tw']
+                    'asatp', 'kjamat', 'tw']
 
 
 
