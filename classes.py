@@ -23,8 +23,7 @@ and source not in ('ret', 'arvind.tech', 'act*', 'retdm', 'null', 'cal','calenda
 
 def google_cred():
     # Load service account info from st.secrets
-    json_key = st.secrets["JSON"]
-    keyfile_dict = json.loads(json_key)
+    keyfile_dict = dict(st.secrets["JSON"])
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile_dict, scope)
     client = gspread.authorize(credentials)
