@@ -392,7 +392,7 @@ if side_radio == 'Platform Level Analysis':
         payment_df['Amount'] = payment_df['Amount'].astype(int)
         spend_df = spend_df.replace(-1, 0)
         spend_df['Category'] = spend_df.apply(categorize, axis=1)
-        # spend_df.loc[(spend_df['CampaignName'].str.contains('_aj', na = False, case = False)),'Category'] = 'Astroji'
+        spend_df.loc[(spend_df['CampaignName'].str.contains('_aj', na = False, case = False)),'Category'] = 'Astroji'
         # spend_df['Category'] = spend_df['CampaignName'].apply(lambda x: 'Spirituality' if ('_al' in str(x).lower() and '_tw' not in str(x).lower()) else ('Finance' if '_tw' in str(x).lower() else None))
         start_date2 = start_date
         start_date = pd.to_datetime(start_utc)
