@@ -1075,12 +1075,12 @@ if side_radio == 'Class spend':
                         start_time = merged_classes.loc[i, 'Start_time']
                         end_time = merged_classes.loc[i, 'end_time']
 
-                        spend_mc = spend_df[spend_df['CampaignName'].str.contains(code, na=False, regex=False)]
+                        spend_mc = spend_df[(spend_df['CampaignName'].str.contains(code, na=False, regex=False)) | spend_df['AdName'].str.contains(code, na=False, regex=False)] 
 
                         # Google Paid
                         google_paid = spend_mc[
                             (spend_mc['Platform'] == 'google') &
-                            (spend_mc['CampaignName'].str.contains('paid', case=False, na=False))
+                        ( (spend_mc['CampaignName'].str.contains('paid', case=False, na=False))|(spend_mc['AdsetName'].str.contains('mxpayment', case=False, na=False)))
                         ]
                         if not google_paid.empty:
                             merged_classes.loc[i, 'Google Paid'] = adjusted_spend(start_date, end_date, start_time, end_time, google_paid)
@@ -1088,7 +1088,7 @@ if side_radio == 'Class spend':
                         # Facebook Paid
                         facebook_paid = spend_mc[
                             (spend_mc['Platform'] == 'facebook') &
-                            (spend_mc['CampaignName'].str.contains('conversion', case=False, na=False))
+                        ( (spend_mc['CampaignName'].str.contains('paid|conversion', case=False, na=False))|(spend_mc['AdsetName'].str.contains('mxpayment', case=False, na=False)))
                         ]
                         if not facebook_paid.empty:
                             merged_classes.loc[i, 'Facebook Paid'] = adjusted_spend(start_date, end_date, start_time, end_time, facebook_paid)
@@ -1096,7 +1096,7 @@ if side_radio == 'Class spend':
                         # Google Free
                         google_free = spend_mc[
                             (spend_mc['Platform'] == 'google') &
-                            (~spend_mc['CampaignName'].str.contains('paid', case=False, na=False))
+                            (~spend_mc['CampaignName'].str.contains('paid|conversion', case=False, na=False)) & (~spend_mc['AdsetName'].str.contains('mxpayment', case=False, na=False))
                         ]
                         if not google_free.empty:
                             merged_classes.loc[i, 'Google Free'] = adjusted_spend(start_date, end_date, start_time, end_time, google_free)
@@ -1104,7 +1104,7 @@ if side_radio == 'Class spend':
                         # Facebook Free
                         facebook_free = spend_mc[
                             (spend_mc['Platform'] == 'facebook') &
-                            (~spend_mc['CampaignName'].str.contains('paid', case=False, na=False))
+                        (~spend_mc['CampaignName'].str.contains('paid|conversion', case=False, na=False)) & (~spend_mc['AdsetName'].str.contains('mxpayment', case=False, na=False))
                         ]
                         if not facebook_free.empty:
                             merged_classes.loc[i, 'Facebook Free'] = adjusted_spend(start_date, end_date, start_time, end_time, facebook_free)
@@ -1113,8 +1113,7 @@ if side_radio == 'Class spend':
                             (spend_mc['Platform'] == 'Taboola')
                         ]
                         if not taboola.empty:
-                            merged_classes.loc[i, 'Taboola1'] = adjusted_spend(start_date, end_date, start_time, end_time, taboola)
-
+                            merged_classes.loc[i, 'Taboola'] = adjusted_spend(start_date, end_date, start_time, end_time, taboola)
                     # taboola_merged = pd.merge(merged_classes, Taboola_codes, how="left", on="MasterClass", suffixes=('', '_Taboola'))
                     # taboola_merged['Taboola Spend'] = 0.0
                     # for i in range(len(taboola_merged)):
