@@ -52,7 +52,7 @@ def create_funnel_table2(df, platform):
     # 4. Assign 'Paid' (if not Product)
     mask_paid = (
         (df_filtered['CampaignName'].str.contains('Paid|conversion|mxpayment', case=False, na=False) |
-         df_filtered['AdsetName'].str.contains('mxpayment', case=False, na=False)) &
+         (df_filtered['AdsetName'].str.contains('mxpayment', case=False, na=False))) &
         ~mask_product  # ensure it's not Product
     )
     df_filtered.loc[mask_paid, 'Funnel'] = 'Paid'
