@@ -12,10 +12,6 @@ where "reportDate" between '{start_date}' and '{end_date}'
     return query2
 
 
-finance_keywords = ['hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
-                    'bkhgt', 'jsnit', 'akiob', 'jhft', 'mbcwc', 'amct', 'hspct',
-                    'asatp', 'kjamat', 'tw']
-
 
 finance_keywords = [
     'hjst', 'kpsst', 'psst', 'cjot', 'gvlrs', 'dsaii', 'psis',
@@ -29,13 +25,21 @@ def categorize(row):
     platform = str(row.get('Platform', '')).lower()
 
     # Priority condition for Taboola platform with 'al-' in AdName
-    if platform == 'taboola' and 'al-' in ad_name:
-        return 'Spirituality'
+    # Case 1: Platform is Taboola
+    if platform == 'taboola':
+        if 'al-' in ad_name:
+            return 'Spirituality'
+        else:
+            return 'Finance'
 
-    # Check if any finance keyword is in campaign or ad name
-    if any(keyword in campaign or keyword in ad_name for keyword in finance_keywords):
+    # Case 2: Platform is NOT Taboola and finance keywords exist
+    elif any(keyword in campaign for keyword in finance_keywords) or \
+         any(keyword in ad_name for keyword in finance_keywords):
         return 'Finance'
 
+    # Default
     return 'Spirituality'
+
+
 
 
